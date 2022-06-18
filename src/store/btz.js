@@ -4,9 +4,12 @@ import {
   getDatabase,
   set,
   push,
-  onValue, 
+  onValue,
+  remove
   
 } from 'firebase/database'
+
+import moment from 'moment'
 
 export default{
 
@@ -21,21 +24,30 @@ export default{
 
     clearBtz(state){
       state.btz = {}
-    }
+    },
+
+    
   },
 
   actions:{
-    async createBtz({commit}, {name, ze}) {
+    async createBtz({commit}, {name, ze, dateCreated}) {
       try {
         const uid =  getAuth().currentUser.uid 
         const db = getDatabase()
-        const id = Date.now()
-        await push(ref(db, '/users/' + uid + '/btz'), {name, ze})
+        dateCreated = moment().format('D.MM.Y')
+        await push(ref(db, '/users/' + uid + '/btz'), {name, ze, dateCreated})
       }
       catch(e) {
         commit('setError', e)
         throw(e)
       }
+    },
+
+    async deleteBtz({}, id){
+      const uid = getAuth().currentUser.uid
+      const db = getDatabase()
+      console.log('/users/' + uid + '/btz/' + id)
+      await remove(ref(db, '/users/' + uid + '/btz/' + id))
     },
 
     async fetchBtz({commit}){

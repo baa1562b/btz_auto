@@ -50,8 +50,14 @@ const routes = [
     name: 'bug_report',
     meta: {layout: 'main'},
     component: () => import('../views/BugReport.vue')
-  }
+  },
 
+  {
+    path: '/edit_btz',
+    name: 'edit_btz',
+    meta: {layout: 'main'},
+    component: () => import ('../views/EditBtz.vue')
+  }
 
 
 ]

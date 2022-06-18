@@ -79,6 +79,8 @@ export default {
         
       },
       select: null,
+
+      btz: []
     }
     
   },
@@ -109,7 +111,7 @@ export default {
 
       try{
         this.$store.dispatch('createBtz', { name : this.BtzData.name, ze : this.BtzData.ze})
-        this.$router.push('btz_list')
+        this.$router.push('/btz_list')
       }
       catch(e) {}
     }
