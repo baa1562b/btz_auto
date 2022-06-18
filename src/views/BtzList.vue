@@ -7,7 +7,7 @@
   <div class="history-chart">
     <canvas></canvas>
   </div>
-
+  
   <section>
     <table>
       <thead>
@@ -21,9 +21,9 @@
       </thead>
 
       <tbody>
-      <tr>
-        <td>1</td>
-        <td>My BTZ</td>
+      <tr v-for='b in btz' :key=b>
+        <td>id</td>
+        <td>{{b.name}}</td>
         <td>12.12.32</td>
         <td>09.03.04 "PI"</td>
 
@@ -39,3 +39,20 @@
   </section>
 </div>
 </template>
+
+<script>
+import { computed } from '@vue/runtime-core'
+export default {
+  data(){
+    return{
+      btz: this.$store.state.btz
+    }
+  },
+
+  async mounted(){
+    await this.$store.dispatch('fetchBtz')
+  },
+
+
+}
+</script>

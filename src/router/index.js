@@ -1,8 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+
 
 const routes = [
 
+  {
+    path: '/',
+    name: 'home',
+    meta: {layout: 'main'},
+    component: () => import('../views/HomeView.vue')    
+  },
 
   {
     path: '/login',
@@ -37,6 +43,13 @@ const routes = [
     name: 'profile',
     meta: {layout: 'main'},
     component: () => import('../views/Profile.vue')
+  },
+
+  {
+    path: '/bug_report',
+    name: 'bug_report',
+    meta: {layout: 'main'},
+    component: () => import('../views/BugReport.vue')
   }
 
 

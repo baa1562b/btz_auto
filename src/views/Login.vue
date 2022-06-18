@@ -1,24 +1,28 @@
 <template>
-  <form class="card auth-card">
+  <form class="card auth-card" @submit.prevent='submitHandler'>
     <div class="card-content">
       <span class="card-title">Домашняя бухгалтерия</span>
       <div class="input-field">
         <input
             id="email"
             type="text"
-            class="validate"
+            v-model='email'
+            :class="{invalid : v$.email.required.$invalid || v$.email.email.$invalid }"
         >
-        <label for="email">Email</label>
-        <small class="helper-text invalid">Email</small>
+        <label  for="email">Email</label>
+        <small v-if='v$.email.required.$invalid' class="helper-text invalid">поле не должно быть пустым</small>
+        <small v-else-if='v$.email.email.$invalid' class="helper-text invalid">введите корректный email адрес</small>
       </div>
       <div class="input-field">
         <input
             id="password"
             type="password"
-            class="validate"
+            v-model='password'
+            :class="{invalid : v$.password.required.$invalid}"
         >
         <label for="password">Пароль</label>
-        <small class="helper-text invalid">Password</small>
+        <small v-if='v$.password.required.$invalid' class="helper-text invalid">Пожалуйста, введите пароль</small>
+        <small v-if='v$.password.minLength.$invalid' class="helper-text invalid">минимум {{v$.password.minLength.$params.min}} символов</small>
       </div>
     </div>
     <div class="card-action">
@@ -34,8 +38,70 @@
 
       <p class="center">
         Нет аккаунта?
-        <a href="/">Зарегистрироваться</a>
+        <router-link to='/register'>Зарегистрироваться</router-link>
       </p>
     </div>
   </form> 
 </template>
+
+<script>
+import useVuelidate  from '@vuelidate/core'
+import {email, required, minLength} from '@vuelidate/validators'
+import messages from '@/utils/messages'
+
+
+export default {
+
+
+  name: 'login',
+
+  mounted() {
+  if (this.$route.query.message) {
+    this.$message(messages[this.$route.query.message])
+  }
+  
+
+  },
+  
+  setup () {
+    return { v$: useVuelidate() }
+  },
+
+  data: () => ({
+      email: '',
+      password: '',
+  }),
+
+  validations: () => ({
+    email: {email, required, $lazy: true},
+    password: {required, minLength: minLength(6), $lazy: true}
+  }),
+
+
+  methods: {
+    async submitHandler() {
+    this.v$.$validate()
+    if (this.v$.$invalid){
+      this.$error(messages['invalid'])
+      return
+    }
+
+    const formData = {
+      email: this.email,
+      password: this.password
+    }
+    
+    try {
+      await this.$store.dispatch('login', formData)
+       this.$router.push('/')
+    }
+
+    catch (e) {
+
+    }
+    
+
+    }
+  }
+}
+</script>

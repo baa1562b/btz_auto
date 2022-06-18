@@ -1,0 +1,3 @@
+<template>
+  BUG REPORT
+</template>
