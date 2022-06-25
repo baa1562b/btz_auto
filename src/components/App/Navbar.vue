@@ -2,8 +2,8 @@
       <nav class="navbar orange lighten-1">
       <div class="nav-wrapper">
         <div class="navbar-left">
-          <a href="#">
-            <i class="material-icons black-text">dehaze</i>
+          <a href="/">
+            <span class="black-text font">AutoTest</span>
           </a>
           <span class="black-text">{{date}}</span>
         </div>
@@ -38,6 +38,13 @@
       </div>
     </nav>
 </template>
+
+<style scoped>
+ .font{
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 20px
+ }
+</style>
 
 
 <script>

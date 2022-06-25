@@ -35,7 +35,7 @@ export default {
   async mounted() {
     
       await this.$store.dispatch('fetchInfo')
-      await this.$store.dispatch('fetchBtz')
+      // await this.$store.dispatch('fetchBtz')
     
   }
 }

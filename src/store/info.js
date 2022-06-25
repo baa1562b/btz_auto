@@ -24,7 +24,7 @@ export default {
 
   actions: {
      fetchInfo({commit}) {
-      const uid =  getAuth().currentUser.uid 
+      const uid =  localStorage.uId 
       const db = getDatabase()
       const infoRef = ref (db, '/users/' + uid + '/info')
       onValue(infoRef, (snapshot) => {

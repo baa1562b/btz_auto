@@ -1,7 +1,7 @@
 <template>
   <form class="card auth-card" @submit.prevent='submitHandler'>
     <div class="card-content">
-      <span class="card-title">Домашняя бухгалтерия</span>
+      <span class="card-title font">AutoTest</span>
       <div class="input-field">
         <input
             id="email"
@@ -43,6 +43,13 @@
     </div>
   </form> 
 </template>
+
+<style scoped>
+ .font{
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 20px
+ }
+</style>
 
 <script>
 import useVuelidate  from '@vuelidate/core'

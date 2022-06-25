@@ -19,6 +19,7 @@ export default{
     async login ({dispatch, commit}, {email, password}) {
       try { 
         await signInWithEmailAndPassword(getAuth(),email,password) 
+        localStorage.setItem('uId', getAuth().currentUser.uid )
       }
       catch (e) {
         commit('setError', e)
@@ -29,9 +30,12 @@ export default{
     async register({dispatch, commit}, {email, password, login}) {
       try {
         await createUserWithEmailAndPassword(getAuth(), email, password)
-        const uid = getAuth().currentUser.uid
+        localStorage.setItem('uId', getAuth().currentUser.uid)
+        const uid = localStorage.uId
         const db = getDatabase()
         await set(ref(db, '/users/' + uid + '/info'),{login})
+        
+        
       }
       catch (e) {
         commit('setError', e)
@@ -43,6 +47,8 @@ export default{
       await signOut(getAuth())
       commit('clearInfo')
       commit('clearBtz')
+      commit('clearCategories')
+      localStorage.clear()
     },
 
     getUid(){

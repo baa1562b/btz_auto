@@ -27,6 +27,7 @@ const routes = [
   {
     path: '/btz_list',
     name: 'btz_list',
+    props: true,
     meta: {layout: 'main'},
     component: () => import('../views/BtzList.vue')
   },
@@ -55,9 +56,18 @@ const routes = [
   {
     path: '/edit_btz',
     name: 'edit_btz',
+    props: true,
     meta: {layout: 'main'},
     component: () => import ('../views/EditBtz.vue')
-  }
+  },
+
+  {
+    path: '/edit_category',
+    name: 'edit_category',
+    props: true,
+    meta: {layout: 'main'},
+    component: () => import ('../views/EditCategory.vue')
+  },
 
 
 ]

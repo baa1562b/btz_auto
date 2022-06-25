@@ -20,12 +20,12 @@
       </thead>
 
       <tbody>
-      <tr v-for='(b, i) in btz.btz' :key='b.id'>
+      <tr v-for='(b, i) in this.$store.state.btz.btz' :key='b.id'>
         <td>{{i+1}}</td>
         <td>{{b.name}}</td>
         <td>{{b.dateCreated}}</td>
         <td>{{b.ze}}</td>
-        <td>09.03.04 "PI"</td>
+        <td>{{b.facultet}}</td>
         
 
         <td>
@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { query } from '@firebase/database'
 
 export default {
    data(){
@@ -55,15 +56,21 @@ export default {
     }
   },
 
-  async mounted(){
-    
-   this.btz =  await this.$store.state.btz
+   mounted(){
+    this.$store.dispatch('fetchBtz')
+    this.btz = this.$store.state.btz.btz
   },
+  
 
   methods:{
     editBtz(id) {
-      console.log(id)
-      this.$router.push('/edit_btz?id=' + id)
+      // console.log(id)
+      
+      
+      this.$router.push({
+        path: '/edit_btz',
+        query: {btz_id : id}
+      })
       
     },
 
@@ -71,7 +78,7 @@ export default {
       await this.$store.dispatch('deleteBtz', id)
       await this.$store.commit('clearBtz')
       await this.$store.dispatch('fetchBtz')
-      this.btz =  await this.$store.state.btz
+      this.btz =  await this.$store.state.btz.btz
     }
   }
 
