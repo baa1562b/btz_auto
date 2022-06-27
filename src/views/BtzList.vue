@@ -25,29 +25,37 @@
         <td>{{b.name}}</td>
         <td>{{b.dateCreated}}</td>
         <td>{{b.ze}}</td>
-        <td>{{b.facultet}}</td>
+        <td>
+          <div class="chip" v-for='(f, i) in b.facultet' :key='i'>
+               {{f}} 
+          </div>
+        </td>
         
 
         <td>
-          <button class="btn-small btn orange lighten-1" @click='editBtz(b.id)'>
+          <button class="btn-small btn purple darken-4 lighten-1" @click='editBtz(b.id)'>
             <i class="material-icons">info</i>
           </button>
           &nbsp;
           
-          <button class="btn-small btn red lighten-1" @click='deleteBtz(b.id)'>
+          <button class="btn-small btn pink darken-1 lighten-1" @click='deleteBtz(b.id)'>
             <i class="material-icons">delete</i>
           </button>
 
         </td>
       </tr>
       </tbody>
+      
     </table>
+    <div class="row" v-if='JSON.stringify(this.$store.state.btz.btz) === "{}"'>
+      <div class="col s8 offset-s3"><h5>У  ВАС ПОКА НЕТ БАНКОВ ТЕСТОВЫХ ЗАДАНИЙ</h5></div>
+    </div>
   </section>
 </div>
 </template>
 
 <script>
-import { query } from '@firebase/database'
+
 
 export default {
    data(){
@@ -64,7 +72,7 @@ export default {
 
   methods:{
     editBtz(id) {
-      // console.log(id)
+      
       
       
       this.$router.push({

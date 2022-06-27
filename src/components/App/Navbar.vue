@@ -1,17 +1,17 @@
 <template>
-      <nav class="navbar orange lighten-1">
+      <nav class="navbar purple darken-4">
       <div class="nav-wrapper">
         <div class="navbar-left">
           <a href="/">
-            <span class="black-text font">AutoTest</span>
+            <span class="white-text font">AutoTest</span>
           </a>
-          <span class="black-text">{{date}}</span>
+          <span class="white-text">{{date}}</span>
         </div>
 
         <ul class="right hide-on-small-and-down">
           <li>
             <a
-                class="dropdown-trigger black-text"
+                class="dropdown-trigger white-text"
                 href="#"
                 data-target="dropdown"
                 ref='dropdown'

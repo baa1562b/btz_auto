@@ -6,7 +6,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    meta: {layout: 'main'},
+    meta: {layout: 'main', auth: 'true'},
     component: () => import('../views/HomeView.vue')    
   },
 
@@ -28,28 +28,28 @@ const routes = [
     path: '/btz_list',
     name: 'btz_list',
     props: true,
-    meta: {layout: 'main'},
+    meta: {layout: 'main', auth: 'true'},
     component: () => import('../views/BtzList.vue')
   },
 
   {
     path: '/create_btz',
     name: 'create_btz',
-    meta: {layout: 'main'},
+    meta: {layout: 'main', auth: 'true'},
     component: () => import('../views/CreateBtz.vue')
   },
 
   {
     path: '/profile',
     name: 'profile',
-    meta: {layout: 'main'},
+    meta: {layout: 'main', auth: 'true'},
     component: () => import('../views/Profile.vue')
   },
 
   {
     path: '/bug_report',
     name: 'bug_report',
-    meta: {layout: 'main'},
+    meta: {layout: 'main', auth: 'true'},
     component: () => import('../views/BugReport.vue')
   },
 
@@ -57,7 +57,7 @@ const routes = [
     path: '/edit_btz',
     name: 'edit_btz',
     props: true,
-    meta: {layout: 'main'},
+    meta: {layout: 'main', auth: 'true'},
     component: () => import ('../views/EditBtz.vue')
   },
 
@@ -65,7 +65,7 @@ const routes = [
     path: '/edit_category',
     name: 'edit_category',
     props: true,
-    meta: {layout: 'main'},
+    meta: {layout: 'main', auth: 'true'},
     component: () => import ('../views/EditCategory.vue')
   },
 
@@ -75,6 +75,17 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const logged = localStorage.uId
+  const requiredAuth = to.matched.some(record => record.meta.auth)
+
+  if (requiredAuth && !logged) {
+    next('/login?message=notAuthorized')
+  } else {
+    next()
+  }
 })
 
 export default router

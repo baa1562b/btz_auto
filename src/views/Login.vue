@@ -28,7 +28,7 @@
     <div class="card-action">
       <div>
         <button
-            class="btn waves-effect waves-light auth-submit"
+            class="btn waves-effect waves-light auth-submit purple darken-4"
             type="submit"
         >
           Войти

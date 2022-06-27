@@ -1,57 +1,77 @@
 <template>
-  <div>
-    <ul class="collection with-header">
-        <li class="collection-header">
-          <div class="row">
-            <div class="col s10 ">
-              <h5>Друг пяточка- это? </h5>(открытый вопрос)
-            </div>
-            
-            <div class="col s2">
-              <button class="btn-small btn green lighten-1">
-                <i class="material-icons">edit</i>
-              </button>
-              &nbsp;
-              <button class="btn-small btn red lighten-1">
-                <i class="material-icons">delete</i>
-              </button>
-            </div>
-          </div>
-        </li>
-        <li class="collection-item"><div>Ответ: Винни-пух</div></li>
-    </ul>
-    <ul class="collection with-header">
-        <li class="collection-header">
-          <div class="row">
-            <div class="col s10">
-              <h5>Имя главной злодейки мультфильма 101 долматинец?</h5>
-              (закрытый вопрос)
-            </div>
-            <div class="col s2 ">
-              <button class="btn-small btn green lighten-1">
-                <i class="material-icons">edit</i>
-              </button>
-               &nbsp;
-              <button class="btn-small btn red lighten-1">
-                <i class="material-icons">delete</i>
-              </button>
-            </div>
-            
-          </div>
-        </li>
-        <li class="collection-item"><div>Правильный ответ: Круэелла девиль</div></li>
-        <li class="collection-item"><div>Неправильный ответ: Гермиона Грейнджер</div></li>
-        <li class="collection-item"><div>Неправильный ответ: Мальвина</div></li>
-        <li class="collection-item"><div>Неправильный ответ: Анна Каренина</div></li>
-        
-    </ul>
+<div class="page-title">
+  <a class="btn btn-floating purple darken-4" @click='this.$router.go(-1)'>
+    <i class="material-icons">arrow_back</i>
+  </a>
+</div>
+<section>
+  <div class="row" v-if='JSON.stringify(this.$store.state.btz.questions) === "{}"'>
+    <div class="col s6 offset-s3" ><h5>В ЭТОЙ КАТЕГОРИИ ПОКА НЕТ ВОПРОСОВ</h5></div>
   </div>
-  <div class="fixed-action-btn">
-    <a  class=" btn btn-floating btn-large orange tooltipped modal-trigger" href='#modal' ref ='tooltip' data-position="left" data-tooltip='Добавить вопрос'>
+
+    <div class="fixed-action-btn">
+    <a  class=" btn btn-floating btn-large purple darken-4 tooltipped modal-trigger" href='#modal' ref ='tooltip' data-position="left" data-tooltip='Добавить вопрос'>
       <i class="large material-icons">add</i>
     </a>
   </div>
 
+  
+  <div class="row" v-for='(q,i) in this.$store.state.btz.questions' :key='i'>
+    <div class="col s10 offset-s1">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title"><h5>Вопрос #{{i+1}}</h5>({{q.type}})</span>
+          <p>{{q.text}}</p>
+          <div class="page-title">
+          </div>
+
+          <div v-if='q.type === "open"'>
+            <div class="chip light-green darken-1 white-text">
+            {{q.answer}}
+            </div>
+          </div>
+
+          <div v-if='q.type === "close"'>
+            <div class="answer">
+              <div class="chip light-green darken-1 white-text">
+                {{q.answerTrue}}
+              </div>
+            </div>
+
+            <div class="answer">
+              <div class="chip pink darken-1 white-text">
+                {{q.answerFalse1}}
+              </div>
+            </div>
+
+            <div class="answer">
+              <div class="chip pink darken-1 white-text">
+                {{q.answerFalse2}}
+              </div>
+            </div>
+
+            <div class="answer">
+              <div class="chip pink darken-1 white-text">
+                {{q.answerFalse3}}
+              </div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <div class='right'>
+              <a class="btn btn-floating purple darken-4 ">
+                <i class="material-icons">edit</i>
+              </a>
+              &nbsp;
+              <a class="btn btn-floating pink darken-1 " @click='removeQuestion(q.id)'>
+                <i class="material-icons">delete</i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
     <!-- Modal Structure -->
   <div id="modal" class="modal" ref='modal'>
     <div class="modal-content">
@@ -165,9 +185,22 @@ export default {
   mounted() {
     this.tooltip = M.Tooltip.init(this.$refs.tooltip)
     this.modal = M.Modal.init(this.$refs.modal)
+
+    this.$store.commit('clearQuestions')
+    this.$store.dispatch('fetchQuestions', {btzId: this.$route.query.btz_Id, categId: this.$route.query.categ_Id})
+   
   },
 
   methods: {
+    backClick(){
+      this.$router.push({
+        path: '/edit_btz',
+        query: {
+          btz_Id: this.$route.query.btz_id,
+        }
+      })
+    },
+
     async AddQuestion(){
       if (this.questionType === 'open'){
         this.v$.$validate()
@@ -175,14 +208,9 @@ export default {
           console.log('wrong data (open answer)')
           return
         }
-        let question = {
-          name : this.questionName,
-          type : this.questionType,
-          text: this.questionText,
-          answer: this.openAnswer
-        }
+        
         await this.$store.dispatch('addOpenQuestion', {btzId : this.$route.query.btz_Id, categId: this.$route.query.categ_Id, name: this.questionName, type: this.questionType, text: this.questionText, answer: this.openAnswer})
-        console.log('open question added')
+        this.clearModal()
         this.modal.close()
       }
 
@@ -190,19 +218,33 @@ export default {
         if (this.v$.questionName.required.$validate || this.v$.questionText.required.$invalid || this.v$.closeAnswerTrue.required.$invalid || this.v$.closeAnswerFalse1.required.$invalid || this.v$.closeAnswerFalse2.required.$invalid || this.v$.closeAnswerFalse2.required.$invalid){
           console.log('wrong data (close answer)')
         }
-        console.log('close')
+        await this.$store.dispatch('addCloseQuestion', {btzId: this.$route.query.btz_Id, categId: this.$route.query.categ_Id, name: this.questionName, type: this.questionType, text: this.questionText, answerTrue: this.closeAnswerTrue, answerFalse1: this.closeAnswerFalse1 , answerFalse2: this.closeAnswerFalse2 , answerFalse3: this.closeAnswerFalse3})
+        this.clearModal()
         this.modal.close()
       }
+    },
+
+    removeQuestion(id){
+      this.$store.dispatch('deleteQuestion',{btzId : this.$route.query.btz_Id, categId : this.$route.query.categ_Id, questionId: id})
+      this.$store.commit('clearQuestions')
+      this.$store.dispatch('fetchQuestions', {btzId: this.$route.query.btz_Id, categId: this.$route.query.categ_Id})
+    },
+
+    clearModal(){
+      this.questionName = '',
+      this.questionText = '',
+      this.openAnswer = '',
+      this.closeAnswerTrue = '',
+      this.closeAnswerFalse1 = '',
+      this.closeAnswerFalse2 = '',
+      this.closeAnswerFalse3 = ''
     },
 
     closeModal(){
       this.modal.close()
     },
 
-    updateModal(){
-      M.updateTextFields()
-    }
+    
   }
 }
 </script>
-

@@ -44,7 +44,7 @@
         <div class="card-action">
           <div>
             <button
-              class="btn waves-effect waves-light auth-submit"
+              class="btn waves-effect waves-light auth-submit purple darken-4"
               type='submit'
             >
             Создать БТЗ
@@ -132,8 +132,6 @@ export default {
 
   mounted() {
     this.select = M.FormSelect.init(this.$refs.select);
-
-     
   },
 
   methods: {
@@ -142,11 +140,9 @@ export default {
       if (this.v$.$invalid){
         return
       }
-
       try{
         this.$store.dispatch('createBtz', { name : this.BtzData.name, ze : this.BtzData.ze, facultet: this.BtzData.selected})
         this.$router.push('/btz_list')
-        
       }
       catch(e) {}
     }

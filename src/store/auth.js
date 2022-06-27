@@ -48,6 +48,7 @@ export default{
       commit('clearInfo')
       commit('clearBtz')
       commit('clearCategories')
+      commit('clearQuestions')
       localStorage.clear()
     },
 

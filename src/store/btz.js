@@ -37,6 +37,14 @@ export default{
 
     removeCategory(state, index){
       state.categories.delete(index)
+    },
+
+    setQuestions(state, questions){
+      state.questions = questions
+    },
+
+    clearQuestions(state) {
+      state.questions = {}
     }
 
     
@@ -98,6 +106,28 @@ export default{
       const uid =  localStorage.uId
       const db = getDatabase()
       await push(ref(db, '/users/' + uid + '/btz/' + btzId + '/categories/' + categId + '/questions'), {name, type, text, answer})
+    },
+
+    async addCloseQuestion({},{btzId, categId, name, type, text, answerTrue, answerFalse1, answerFalse2, answerFalse3}){
+      const uid = localStorage.uId
+      const db = getDatabase()
+      await push(ref(db, '/users/' + uid + '/btz/' + btzId + '/categories/' + categId + '/questions'), {name, type, text, answerTrue, answerFalse1, answerFalse2, answerFalse3})
+    },
+
+    async fetchQuestions({commit},{btzId,categId}) {
+      const uid =  localStorage.uId
+      const db = getDatabase()
+      const qRef = ref(db, '/users/' + uid + '/btz/' + btzId + '/categories/' + categId + '/questions/')
+      onValue(qRef, (snapshot) => {
+        const qInfo = snapshot.val();
+        commit('setQuestions', Object.keys(qInfo).map(key => ({...qInfo[key], id: key })))
+      })
+    },
+
+    async deleteQuestion({},{btzId, categId, questionId}){
+      const uid = localStorage.uId
+      const db = getDatabase()
+      await remove(ref(db, '/users/' + uid + '/btz/' + btzId + '/categories/' + categId + '/questions/' + questionId))
     }
       
 
