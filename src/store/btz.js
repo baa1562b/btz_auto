@@ -5,7 +5,8 @@ import {
   set,
   push,
   onValue,
-  remove
+  remove,
+  update
   
 } from 'firebase/database'
 
@@ -128,8 +129,19 @@ export default{
       const uid = localStorage.uId
       const db = getDatabase()
       await remove(ref(db, '/users/' + uid + '/btz/' + btzId + '/categories/' + categId + '/questions/' + questionId))
+    },
+    
+    async EditOpenQuestion({},{btzId, categId, questionId, answer, text}){
+      const db = getDatabase()
+      const uId = localStorage.uId
+      update(ref(db,'/users/' + uId + '/btz/' + btzId + '/categories/' + categId + '/questions/' + questionId), {text, answer})
+    },
+
+    async EditCloseQuestion({},{btzId, categId, questionId, text, answerTrue, answerFalse1, answerFalse2, answerFalse3}){
+      const db = getDatabase()
+      const uId = localStorage.uId
+      update(ref(db,'/users/' + uId + '/btz/' + btzId + '/categories/' + categId + '/questions/' + questionId), {text, answerTrue, answerFalse1, answerFalse2, answerFalse3})
     }
-      
 
 
   },

@@ -69,6 +69,14 @@ const routes = [
     component: () => import ('../views/EditCategory.vue')
   },
 
+  {
+    path: '/edit_question',
+    name: 'edit_question',
+    props: true,
+    meta: {layout: 'main', auth: 'true'},
+    component: () => import ('../views/EditQuestion.vue')
+  }
+
 
 ]
 

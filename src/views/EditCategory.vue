@@ -20,7 +20,7 @@
     <div class="col s10 offset-s1">
       <div class="card">
         <div class="card-content">
-          <span class="card-title"><h5>Вопрос #{{i+1}}</h5>({{q.type}})</span>
+          <span class="card-title"><h5>Вопрос #{{i+1}}</h5></span>
           <p>{{q.text}}</p>
           <div class="page-title">
           </div>
@@ -58,7 +58,7 @@
           </div>
           <div class="card-actions">
             <div class='right'>
-              <a class="btn btn-floating purple darken-4 ">
+              <a class="btn btn-floating purple darken-4" @click='editQ(q.id)'>
                 <i class="material-icons">edit</i>
               </a>
               &nbsp;
@@ -205,7 +205,7 @@ export default {
       if (this.questionType === 'open'){
         this.v$.$validate()
         if(this.v$.questionName.required.$invalid || this.v$.questionText.required.$invalid || this.v$.openAnswer.required.$invalid){
-          console.log('wrong data (open answer)')
+          // console.log('wrong data (open answer)')
           return
         }
         
@@ -215,8 +215,10 @@ export default {
       }
 
       if (this.questionType === 'close'){
+        this.v$.$validate()
         if (this.v$.questionName.required.$validate || this.v$.questionText.required.$invalid || this.v$.closeAnswerTrue.required.$invalid || this.v$.closeAnswerFalse1.required.$invalid || this.v$.closeAnswerFalse2.required.$invalid || this.v$.closeAnswerFalse2.required.$invalid){
-          console.log('wrong data (close answer)')
+          // console.log('wrong data (close answer)')
+          return
         }
         await this.$store.dispatch('addCloseQuestion', {btzId: this.$route.query.btz_Id, categId: this.$route.query.categ_Id, name: this.questionName, type: this.questionType, text: this.questionText, answerTrue: this.closeAnswerTrue, answerFalse1: this.closeAnswerFalse1 , answerFalse2: this.closeAnswerFalse2 , answerFalse3: this.closeAnswerFalse3})
         this.clearModal()
@@ -228,6 +230,17 @@ export default {
       this.$store.dispatch('deleteQuestion',{btzId : this.$route.query.btz_Id, categId : this.$route.query.categ_Id, questionId: id})
       this.$store.commit('clearQuestions')
       this.$store.dispatch('fetchQuestions', {btzId: this.$route.query.btz_Id, categId: this.$route.query.categ_Id})
+    },
+
+    editQ(id){
+      this.$router.push({
+        path: '/edit_question',
+        query: {
+          btz_Id: this.$route.query.btz_Id,
+          categ_Id: this.$route.query.categ_Id,
+          q_id: id,
+        }
+      })
     },
 
     clearModal(){
